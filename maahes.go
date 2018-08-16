@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -12,7 +16,7 @@ var (
 )
 
 func main() {
-	d, err := discordgo.New("Bot <yourtoken>")
+	d, err := discordgo.New("Bot <yourtoken")
 
 	if err != nil {
 		fmt.Println("failed to create discord session", err)
@@ -46,8 +50,18 @@ func handleCmd(d *discordgo.Session, msg *discordgo.MessageCreate) {
 
 	content := msg.Content
 
-	if content == "!test" {
-		d.ChannelMessageSend(msg.ChannelID, "Testing..")
+	theo, err := ioutil.ReadFile("data/theo.txt")
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	lines := strings.Split(string(theo), "\n")
+
+	if content == "!theo" {
+		r := rand.New(rand.NewSource(time.Now().Unix()))
+		i := r.Intn(len(lines) - 1)
+		line := lines[i]
+		d.ChannelMessageSend(msg.ChannelID, line)
 	}
 
 	fmt.Printf("Message: %+v\n", msg.Message)
