@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 
@@ -20,12 +21,14 @@ func main() {
 
 	if err != nil {
 		fmt.Println("failed to create discord session", err)
+		os.Exit(1)
 	}
 
 	mihos, err := d.User("@me")
 
 	if err != nil {
 		fmt.Println("failed to access account", err)
+		os.Exit(1)
 	}
 
 	mid = mihos.ID
