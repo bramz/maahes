@@ -7,10 +7,10 @@ type Command struct {
 
 type CmdHandler interface {
 	Name() string
-	Register(string, string)
+	Register(string)
 }
 
-func CmdRegister(ch CmdHandler) *Command {
+func AddCmd(ch CmdHandler) *Command {
 	return &Command{
 		trigger: string(ch.Name()),
 		handler: ch,
@@ -18,5 +18,27 @@ func CmdRegister(ch CmdHandler) *Command {
 }
 
 func (c *Command) Register(ct string) {
-	c.handler.Register(ct, c.trigger)
+	c.handler.Register(ct)
+	c.trigger = c.handler.Load(ct)
 }
+
+func (c *Command) Name() string {
+	return string(c.trigger)
+}
+
+type Commands struct {
+	name map[string]string
+}
+
+func NewCommand() *Commands {
+	return &Commands{
+		name: map[string]string
+	}
+}
+
+func (cmds *Commands) Register(ct map[string]string) string {
+	cmds.name[ct] = ct
+	return cmds.name[ct]
+}
+
+
