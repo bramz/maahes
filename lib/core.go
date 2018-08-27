@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 
+	"github.com/bramz/maahes/lib/commands"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -39,16 +40,16 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	content := message.Content
 
-	commands := map[string]*Command{
-		"test", TestCmd,
-		"theo", TheoCmd,
-		"quit", QuitCmd,
+	cmds := map[string]*Command{
+		"test": commands.TestCmd,
+		"theo": commands.TheoCmd,
+		"quit": commands.QuitCmd,
 	}
 
 	if string(content[0]) == "!" {
 		trigger := content[1:]
-		if trigger == commands[trigger]*Command {
-			return commands[trigger]
+		if trigger == cmds[trigger]*Command {
+			return cmds[trigger]
 		} else {
 			fmt.Println("command does not exist")
 		}
