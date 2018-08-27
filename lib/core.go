@@ -5,6 +5,7 @@ import (
 
 	"github.com/bramz/maahes/lib/commands"
 	"github.com/bwmarrin/discordgo"
+	"github.com/fatih/color"
 )
 
 func StartSession() {
@@ -52,5 +53,9 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 		out()
 	}
 
-	fmt.Printf("Message: %+v\n", message.Message)
+	green := color.New(color.FgGreen).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
+	blue := color.New(color.FgBlue).SprintFunc()
+
+	fmt.Printf("#%s <%s>: %s\n", green(message.ChannelID), red(message.Author), blue(message.Content))
 }
