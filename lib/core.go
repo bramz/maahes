@@ -2,10 +2,6 @@ package lib
 
 import (
 	"fmt"
-	"io/ioutil"
-	"math/rand"
-	"strings"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -17,7 +13,7 @@ func StartSession() {
 		return
 	}
 
-	discord.AddHandler(Commands)
+	discord.AddHandler(Parser)
 
 	err = discord.Open()
 	if err != nil {
@@ -29,7 +25,7 @@ func StartSession() {
 	<-make(chan struct{})
 }
 
-func Commands(session *discordgo.Session, message *discordgo.MessageCreate) {
+func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 	maahes, err := session.User("@me")
 	if err != nil {
 		fmt.Println(err)
@@ -43,18 +39,19 @@ func Commands(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	content := message.Content
 
-	theo, err := ioutil.ReadFile("data/theo.txt")
-	if err != nil {
-		fmt.Println(err)
-		return
+	commands := map[string]*Command{
+		"test", TestCmd,
+		"theo", TheoCmd,
+		"quit", QuitCmd,
 	}
-	lines := strings.Split(string(theo), "\n")
 
-	if content == "!theo" {
-		r := rand.New(rand.NewSource(time.Now().Unix()))
-		i := r.Intn(len(lines) - 1)
-		line := lines[i]
-		session.ChannelMessageSend(message.ChannelID, line)
+	if string(content[0]) == "!" {
+		trigger := content[1:]
+		if trigger == commands[trigger]*Command {
+			return commands[trigger]
+		} else {
+			fmt.Println("command does not exist")
+		}
 	}
 
 	fmt.Printf("Message: %+v\n", message.Message)

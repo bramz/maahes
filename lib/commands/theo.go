@@ -1,16 +1,16 @@
 package commands
 
-type Theo struct {
-	output string
-}
-
-func RandomQuote() *Theo {
-	return &Theo{
-		output: string
+func TheoCmd {
+	theo, err := ioutil.ReadFile("data/theo.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
-}
+	lines := strings.Split(string(theo), "\n")
 
-func (t *Theo) Register(name string) {
-	t.output = name
-	return
+	if content == "!theo" {
+		r := rand.New(rand.NewSource(time.Now().Unix()))
+		i := r.Intn(len(lines) - 1)
+		line := lines[i]
+		return line
 }
