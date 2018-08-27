@@ -7,7 +7,7 @@ type Command struct {
 
 type CmdHandler interface {
 	Name() string
-	Register(map[string]*Command)
+	Register(map[string]func() string)
 }
 
 func AddCmd(ch CmdHandler) *Command {
@@ -17,7 +17,7 @@ func AddCmd(ch CmdHandler) *Command {
 	}
 }
 
-func (c *Command) Register(cm map[string]*Command) {
+func (c *Command) Register(cm map[string]func() string) {
 	c.handler.Register(cm)
 	return
 }

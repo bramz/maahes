@@ -40,19 +40,15 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	content := message.Content
 
-	cmds := map[string]*Command{
+	cmds := map[string]func() string{
 		"test": commands.TestCmd,
 		"theo": commands.TheoCmd,
-		"quit": commands.QuitCmd,
+		//		"quit": commands.QuitCmd,
 	}
 
 	if string(content[0]) == "!" {
 		trigger := content[1:]
-		if trigger == cmds[trigger]*Command {
-			return cmds[trigger]
-		} else {
-			fmt.Println("command does not exist")
-		}
+		return
 	}
 
 	fmt.Printf("Message: %+v\n", message.Message)

@@ -1,5 +1,6 @@
 package commands
 
-func TestCmd {
-	return "test"
+func TestCmd() string {
+	test := string("testing..")
+	return test
 }
