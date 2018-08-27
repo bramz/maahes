@@ -47,8 +47,9 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 	}
 
 	if string(content[0]) == "!" {
-		trigger := content[1:]
-		return
+		ct := content[1:]
+		out := cmds[ct]
+		out()
 	}
 
 	fmt.Printf("Message: %+v\n", message.Message)
