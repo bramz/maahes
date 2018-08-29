@@ -5,6 +5,7 @@ import (
 
 	"github.com/bramz/maahes/lib/commands"
 	"github.com/bwmarrin/discordgo"
+	"github.com/fatih/color"
 )
 
 func StartSession() {
@@ -40,16 +41,22 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	content := message.Content
 
-	cmds := map[string]func() string{
-		"test": commands.TestCmd,
-		"theo": commands.TheoCmd,
+	cmds := map[string]func(string) string{
+		"theo":   commands.TheoCmd(content),
+		"define": commands.DefineCmd(content[1:]),
 		//		"quit": commands.QuitCmd,
 	}
 
 	if string(content[0]) == "!" {
-		trigger := content[1:]
-		return
+		ct := content[1:]
+		out := cmds[ct]
+		session.ChannelMessageSend(message.ChannelID, out(content))
 	}
 
-	fmt.Printf("Message: %+v\n", message.Message)
+	// colorize terminal output
+	green := color.New(color.FgGreen).SprintFunc()
+	red := color.New(color.FgRed).SprintFunc()
+	blue := color.New(color.FgBlue).SprintFunc()
+
+	fmt.Printf("#%s <%s>: %s\n", green(message.ChannelID), red(message.Author), blue(message.Content))
 }
