@@ -9,7 +9,7 @@ import (
 )
 
 func StartSession() {
-	discord, err := discordgo.New("Bot NDc2MzMzMTYyMzkwMzU1OTY4.DmVuFA.Qfc3-cu0lfzaym11Ee0V5_aOUQU")
+	discord, err := discordgo.New("Bot <yourtoken>")
 	if err != nil {
 		fmt.Println(err)
 		return
