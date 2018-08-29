@@ -50,7 +50,7 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 	if string(content[0]) == "!" {
 		ct := content[1:]
 		out := cmds[ct]
-		out()
+		session.ChannelMessageSend(message.ChannelID, out())
 	}
 
 	green := color.New(color.FgGreen).SprintFunc()
