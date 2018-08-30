@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-func TheoCmd(content string) string {
+type TheoCmd struct {
+}
+
+func (t TheoCmd) Handle(content []string) string {
 	theo, err := ioutil.ReadFile("data/theo.txt")
 	if err != nil {
 		fmt.Println(err)
