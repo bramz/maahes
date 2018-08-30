@@ -9,6 +9,13 @@ import (
 	"github.com/fatih/color"
 )
 
+const (
+	cmds := map[string]Cmd{
+		"theo":   commands.TheoCmd{},
+		"define": commands.DefineCmd{},
+	}
+)
+
 func StartSession() {
 	discord, err := discordgo.New("Bot <yourtoken>")
 	if err != nil {
@@ -41,11 +48,6 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 	}
 
 	content := message.Content
-
-	cmds := map[string]Cmd{
-		"theo":   commands.TheoCmd{},
-		"define": commands.DefineCmd{},
-	}
 
 	if string(content[0]) == "!" {
 		ct := content[1:]
