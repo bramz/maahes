@@ -4,8 +4,16 @@ import (
 	"fmt"
 
 	"github.com/bramz/maahes/lib/commands"
+
 	"github.com/bwmarrin/discordgo"
 	"github.com/fatih/color"
+)
+
+const (
+	cmds := map[string]Cmd{
+		"theo":   commands.TheoCmd{},
+		"define": commands.DefineCmd{},
+	}
 )
 
 func StartSession() {
@@ -41,16 +49,10 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	content := message.Content
 
-	cmds := map[string]func(string) string{
-		"theo":   commands.TheoCmd(content),
-		"define": commands.DefineCmd(content[1:]),
-		//		"quit": commands.QuitCmd,
-	}
-
 	if string(content[0]) == "!" {
 		ct := content[1:]
 		out := cmds[ct]
-		session.ChannelMessageSend(message.ChannelID, out(content))
+		session.ChannelMessageSend(message.ChannelID, out.Handle([]string{ct}))
 	}
 
 	// colorize terminal output
