@@ -2,22 +2,18 @@ package lib
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"strings"
+	"syscall"
 
 	"github.com/bramz/maahes/lib/commands"
-
 	"github.com/bwmarrin/discordgo"
 	"github.com/fatih/color"
 )
 
-const (
-	cmds := map[string]Cmd{
-		"theo":   commands.TheoCmd{},
-		"define": commands.DefineCmd{},
-	}
-)
-
-func StartSession() {
-	discord, err := discordgo.New("Bot <yourtoken>")
+func StartSession(token string) {
+	discord, err := discordgo.New("Bot " + token)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -30,29 +26,33 @@ func StartSession() {
 		fmt.Println(err)
 		return
 	}
-	defer discord.Close()
 
-	<-make(chan struct{})
+	// handle signal calls
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
+
+	defer discord.Close()
+	//<-make(chan struct{})
 }
 
 func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
-	maahes, err := session.User("@me")
-	if err != nil {
-		fmt.Println(err)
-		return
+	valid := []string{"theo", "define", "define2", "say"}
+	cmds := map[string]Cmd{
+		"theo":    commands.TheoCmd{},
+		"define":  commands.DefineCmd{},
+		"define2": commands.DefineCmd2{},
+		"say":     commands.SayCmd{},
 	}
 
-	author := message.Author
-	if author.ID == maahes.ID || author.Bot {
-		return
-	}
-
-	content := message.Content
-
-	if string(content[0]) == "!" {
-		ct := content[1:]
-		out := cmds[ct]
-		session.ChannelMessageSend(message.ChannelID, out.Handle([]string{ct}))
+	if string(message.Content[0]) == "!" {
+		content := strings.Split(message.Content[1:], " ")
+		for v := range valid {
+			if content[0] == valid[v] {
+				out := cmds[content[0]]
+				session.ChannelMessageSend(message.ChannelID, out.Handle(content))
+			}
+		}
 	}
 
 	// colorize terminal output

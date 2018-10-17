@@ -1,0 +1,14 @@
+language: go
+
+go:
+  - "1.10.x"
+  - "1.11.x"
+  - master
+
+install:
+  github.com/bwmarrin/discordgo
+  github.com/davidscholberg/go-urbandict
+  github.com/bramz/maahes/lib
+
+notifications:
+  email: false
