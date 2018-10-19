@@ -1,0 +1,13 @@
+package: .
+import:
+- package: github.com/bramz/maahes
+  subpackages:
+  - lib
+  - lib/commands
+- package: github.com/bwmarrin/discordgo
+  version: ^0.18.0
+- package: github.com/davidscholberg/go-urbandict
+- package: github.com/fatih/color
+  version: ^1.7.0
+- package: gopkg.in/yaml.v2
+  version: ^2.2.1
