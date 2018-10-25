@@ -37,20 +37,21 @@ func StartSession(token string) {
 }
 
 func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
-	valid := []string{"theo", "define", "define2", "say"}
+	valid := []string{"theo", "define", "say"}
 	cmds := map[string]Cmd{
-		"theo":    commands.TheoCmd{},
-		"define":  commands.DefineCmd{},
-		"define2": commands.DefineCmd2{},
-		"say":     commands.SayCmd{},
+		"theo":   commands.TheoCmd{},
+		"define": commands.DefineCmd{},
+		"say":    commands.SayCmd{},
 	}
 
 	if string(message.Content[0]) == "!" {
-		content := strings.Split(message.Content[1:], " ")
+		content := strings.Split(string(message.Content[1:]), " ")
 		for v := range valid {
 			if content[0] == valid[v] {
 				out := cmds[content[0]]
 				session.ChannelMessageSend(message.ChannelID, out.Handle(content))
+			} else {
+				// do nothing
 			}
 		}
 	}
