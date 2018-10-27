@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"database/sql"
 	"fmt"
 	"os"
 	"os/signal"
@@ -10,7 +11,10 @@ import (
 	"github.com/bramz/maahes/lib/commands"
 	"github.com/bwmarrin/discordgo"
 	"github.com/fatih/color"
+	_ "github.com/mattn/go-sqlite3"
 )
+
+var db *sql.DB
 
 func StartSession(token string) {
 	discord, err := discordgo.New("Bot " + token)
@@ -37,11 +41,19 @@ func StartSession(token string) {
 }
 
 func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
-	valid := []string{"theo", "define", "say"}
+	connect, err := sql.Open("sqlite3", "data/maahes.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+	db = connect
+
+	valid := []string{"theo", "define", "say", "markov", "8ball"}
 	cmds := map[string]Cmd{
 		"theo":   commands.TheoCmd{},
 		"define": commands.DefineCmd{},
 		"say":    commands.SayCmd{},
+		"markov": commands.MarkovCmd{},
+		"8ball":  commands.EightBallCmd{},
 	}
 
 	if string(message.Content[0]) == "!" {
@@ -62,4 +74,14 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 	blue := color.New(color.FgBlue).SprintFunc()
 
 	fmt.Printf("#%s <%s>: %s\n", green(message.ChannelID), red(message.Author), blue(message.Content))
+
+	stmt, err := db.Prepare("INSERT INTO messages (content, user, discriminator, channel, server) VALUES (?, ?, ?, ?, ?)")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	_, err = stmt.Exec(message.Content, message.Author.Username, message.Author.Discriminator, message.ChannelID, message.ChannelID)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
