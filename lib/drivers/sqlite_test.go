@@ -6,29 +6,26 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var q []string
+var q string
+var elements []string
 var this Driver
 var db *DataBase
 
 func TestDataBase_Insert(t *testing.T) {
+	db = this.Init("data/maahes.db")
 	name := "Insert"
-	want := "Statement executed"
-	q = "insert into quotes (quote) values("test quote")"
-
-	t.Run(name, func(t *testing.T)) {
-		statement := db.Prepare(q)
-		if got := this.Insert(statement); got != want {
-			t.Errorf("Driver.Insert() = %v, want %v", got, want)
-		}
-	}
+	q = "insert into quotes(id, quote) values(?, ?)"
+	elements = []string{"1", "testing"}
+	t.Run(name, func(t *testing.T) {
+		this.Insert(q, elements)
+	})
 }
 
 func TestDataBase_Select(t *testing.T) {
 	name := "Select"
 	q = "select * from quotes"
 
-	t.Run(name, func(t *testing.T)) {
-		statement := db.Prepare(q)
-		this.Select(statement)
-	}
+	t.Run(name, func(t *testing.T) {
+		this.Select(q)
+	})
 }

@@ -2,39 +2,51 @@ package drivers
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func Init(dbname string) (*DataBase, error) {
+func Init(dbname string) *DataBase {
 	connect, err := sql.Open("sqlite3", dbname)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
-	return &DataBase{connect}, nil
+	return &DataBase{connect}
 }
 
-func (db *DataBase) Insert(q []string) string {
-	statement, err := db.Prepare(q)
+func (db *DataBase) Execute(q string) {
+	_, err := db.Exec(q)
 	if err != nil {
-		return fmt.Print(err)
+		log.Fatal(err)
 	}
-	_, err := statement.Exec(statement)
-	if err != nil {
-		return fmt.Print(err)
-	}
-	return fmt.Print("Statement executed")
 }
 
-func (db *DataBase) Select(q []string) string {
+func (db *DataBase) Insert(q string, elements []string) {
 	statement, err := db.Prepare(q)
 	if err != nil {
-		return fmt.Print("Query failed")
+		log.Fatal(err)
+	}
+	_, err = statement.Exec(elements)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (db *DataBase) Select(q string) string {
+	results, err := db.Query(q)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	results := db.Query(statement)
-	return results
+	var data string
+	for results.Next() {
+		err := results.Scan(&data)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	return data
 }
 
 /*
