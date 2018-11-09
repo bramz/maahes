@@ -6,9 +6,8 @@ go:
   - master
 
 install:
-  github.com/bwmarrin/discordgo
-  github.com/davidscholberg/go-urbandict
-  github.com/bramz/maahes/lib
+  go get -v github.com/Masterminds/glide
 
 notifications:
   email: false
+
