@@ -6,8 +6,9 @@ go:
   - master
 
 install:
-  go get -v github.com/Masterminds/glide
-
+  - go get -v github.com/Masterminds/glide
+  - glide update ; glide install
+  
 notifications:
   email: false
 
