@@ -5,9 +5,10 @@ import:
   - lib
   - lib/commands
 - package: github.com/bwmarrin/discordgo
-  version: ^0.18.0
-- package: github.com/davidscholberg/go-urbandict
+  version: ^0.19.0
 - package: github.com/fatih/color
   version: ^1.7.0
+- package: github.com/mattn/go-sqlite3
+  version: ^1.10.0
 - package: gopkg.in/yaml.v2
   version: ^2.2.1
