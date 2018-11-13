@@ -1,14 +1,13 @@
 # Makefile for Maahes discord bot
 
 depend:
-	curl https://glide.sh/get | sh
-	glide init ; glide update ; glide install			
+	glide update ; glide install
 
-build: | fmt test
+build: | depend fmt test
 	go build
 
-test:
+test: | depend
 	go test ./...
 
-fmt:
+fmt: | depend
 	go fmt ./...
