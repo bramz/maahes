@@ -47,14 +47,15 @@ func Parser(session *discordgo.Session, message *discordgo.MessageCreate) {
 	}
 	db = connect
 
-	valid := []string{"theo", "define", "say", "markov", "8ball", "qdb"}
+	valid := []string{"theo", "define", "say", "markov", "8ball", "qdb", }
 	cmds := map[string]Cmd{
 		"theo":   commands.TheoCmd{},
 		"define": commands.DefineCmd{},
-		"say":    commands.SayCmd{},
-		"markov": commands.MarkovCmd{},
+//		"say":    commands.SayCmd{},
+//		"markov": commands.MarkovCmd{},
 		"8ball":  commands.EightBallCmd{},
 		"qdb":    commands.QdbCommand{db},
+//		"sync":   commands.SyncCmd{},
 	}
 
 	if string(message.Content[0]) == "!" {
